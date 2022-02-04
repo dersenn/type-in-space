@@ -64,7 +64,7 @@ function setup() {
     glyphs.push( new Glyph(
       txt[t],
       random(2, 4), // Anzahl Fragmente
-      p5.Vector.random2D(), // Drehvektor, funktioniert noch nicht so wie ich will
+      {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t]
       ) );
   }
@@ -94,20 +94,26 @@ function draw() {
   cam.z = sin(cam.speed) * cam.dist
 
   cam.lookAt(0,0,0)
-  cam.setPosition(cam.x, cam.y, cam.z)
-
+ 
+  
+  // Zu einem Buchstaben bewegen
+  // move_To ist die Position im glyphs-Array
+  // die x und y-position der Kamera wird aus dem Winkel berechnet
+  // mit dem auf Zeile 116 gedreht wird
+  move_To = 1
+  cam.setPosition( sin(glyphs[move_To].direction.phi) * cam.dist, 0, cos(glyphs[move_To].direction.phi)*cam.dist )
+  //cam.setPosition(cam.x, cam.y, cam.z)
 
   strokeWeight(5)
-  noFill()
 
+  noFill()
 
   // for some reason the path is not connected... no idea why.
   // iterate thru glyphs
   for ( let glyph of glyphs) {
     push()
 
-    // rotation um die y achse gemäss richtungsvektor
-    rotateY( acos(glyph.direction.dot(0,1,0)))
+    rotateY( glyph.direction.phi)
 
     stroke(glyph.color)
     for (let i = 0; i < glyph.chunks.length; i++) {

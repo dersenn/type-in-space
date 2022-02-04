@@ -5,7 +5,7 @@ class Glyph{
         this.nChunks = nChunks,
         this.chunkSize = this.points.length / this.nChunks,
         this.chunks = []
-        this.direction = direction
+        this.direction = direction // phi and theta, kreiskoordinaten
         this.color = color
 
         for (let c = 0; c < this.points.length; c += this.chunkSize) {
