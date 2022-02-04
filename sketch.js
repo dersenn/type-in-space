@@ -98,6 +98,7 @@ function draw() {
   strokeWeight(5)
   noFill()
 
+  // for some reason the path is not connected... no idea why.
   for (let i = 0; i < glyph.chunks.length; i++) {
     stroke(colors[i])
     beginShape()
