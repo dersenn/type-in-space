@@ -59,6 +59,7 @@ function setup() {
     color(0, 0, 255)
   ]
 
+  // all this glyph. stuff should go into class i guess.
   glyph.bounds = font.textBounds(txt, 0, 0, fontSize)
   glyph.points = font.textToPoints(txt, -glyph.bounds.w/2, glyph.bounds.h/2, fontSize, ttpOpts)
 
@@ -76,7 +77,11 @@ function setup() {
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-  orbitControl()
+  // orbitControl()
+
+  // orhtographic for now...
+  // this maybe, for scaling of chunks:
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/building-basic-perspective-projection-matrix
   ortho()
 
   background(255)
