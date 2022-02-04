@@ -27,7 +27,7 @@ let center
 
 let font
 let fontSize = canW / 2
-let txt = 'C' // ['C','4', 'T', 'A']
+let txt = ['C','4', 'T', 'A']
 
 let cam
 
@@ -36,8 +36,7 @@ function preload() {
   font = loadFont('assets/MunkenSans-Medium.otf')
 }
 
-// LETTER (this should become a class "glyph")
-let glyph = {}
+let glyphs = []
 let ttpOpts = {
   sampleFactor: .3,
   simplifyThreshold: 0
@@ -56,19 +55,22 @@ function setup() {
   colors = [
     color(255, 0, 0),
     color(0, 255, 0),
-    color(0, 0, 255)
+    color(0, 0, 255),
+    color (0,0,0)
   ]
 
-  // all this glyph. stuff should go into class i guess.
-  glyph.bounds = font.textBounds(txt, 0, 0, fontSize)
-  glyph.points = font.textToPoints(txt, -glyph.bounds.w/2, glyph.bounds.h/2, fontSize, ttpOpts)
-
-  glyph.nChunks = 3
-  glyph.chunkSize = glyph.points.length / glyph.nChunks
-  glyph.chunks = []
-  for (let c = 0; c < glyph.points.length; c += glyph.chunkSize) {
-    glyph.chunks.push(glyph.points.slice(c, c + glyph.chunkSize))
+  // create glyp objects
+  for (let t = 0; t < txt.length; t++ ){
+    glyphs.push( new Glyph(
+      txt[t],
+      random(2, 4), // Anzahl Fragmente
+      p5.Vector.random2D(), // Drehvektor, funktioniert noch nicht so wie ich will
+      colors[t]
+      ) );
   }
+
+  
+  
   cam = createCamera()
 }
 
@@ -77,8 +79,6 @@ function setup() {
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-  // orbitControl()
-
   // orhtographic for now...
   // this maybe, for scaling of chunks:
   // https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/building-basic-perspective-projection-matrix
@@ -87,7 +87,8 @@ function draw() {
   background(255)
 
   cam.dist = canW / 2
-  cam.speed = frameCount / 100
+  cam.speed = frameCount / 300
+  
   cam.x = cos(cam.speed) * cam.dist
   cam.y = 0
   cam.z = sin(cam.speed) * cam.dist
@@ -95,17 +96,28 @@ function draw() {
   cam.lookAt(0,0,0)
   cam.setPosition(cam.x, cam.y, cam.z)
 
+
   strokeWeight(5)
   noFill()
 
+
   // for some reason the path is not connected... no idea why.
-  for (let i = 0; i < glyph.chunks.length; i++) {
-    stroke(colors[i])
-    beginShape()
-    for (let p = 0; p < glyph.chunks[i].length; p++) {
-      let pt = glyph.chunks[i][p]
-      vertex(pt.x, pt.y, i * 100)
+  // iterate thru glyphs
+  for ( let glyph of glyphs) {
+    push()
+
+    // rotation um die y achse gemäss richtungsvektor
+    rotateY( acos(glyph.direction.dot(0,1,0)))
+
+    stroke(glyph.color)
+    for (let i = 0; i < glyph.chunks.length; i++) {
+      beginShape()
+      for (let p = 0; p < glyph.chunks[i].length; p++) {
+        let pt = glyph.chunks[i][p]
+        vertex(pt.x, pt.y, (i - glyph.chunks.length/2 + 0.5) * 100 )
+      }
+      endShape()
     }
-    endShape()
+    pop()
   }
-}
+} 
