@@ -77,6 +77,7 @@ function setup() {
 
 // ANIMATION VARS
 
+let move_To = 0
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
@@ -89,29 +90,32 @@ function draw() {
 
   cam.dist = canW / 2
   cam.speed = frameCount / 300
-  
-  cam.x = cos(cam.speed) * cam.dist
-  cam.y = 0
-  cam.z = sin(cam.speed) * cam.dist
 
   cam.lookAt(0,0,0)
  
+  //rudimentär animiert. es springt alle 500 frames zum nächsten Buchstaben ;-)
+  //jetzt müsste man zwischen der aktuellen und nächsten Position interpolieren...
+  //und ggf einen moment stehen bleiben.
+  cam.x = sin(glyphs[move_To].direction.phi) * cam.dist
+  cam.y = 0
+  cam.z = cos(glyphs[move_To].direction.phi) * cam.dist
   
-  // Zu einem Buchstaben bewegen
-  // move_To ist die Position im glyphs-Array
-  // die x und y-position der Kamera wird aus dem Winkel berechnet
-  // mit dem auf Zeile 116 gedreht wird
-  move_To = 3
-  cam.setPosition( sin(glyphs[move_To].direction.phi) * cam.dist, 0, cos(glyphs[move_To].direction.phi) * cam.dist )
-  //cam.setPosition(cam.x, cam.y, cam.z)
+  cam.setPosition(cam.x, cam.y, cam.z)
+
+  if(frameCount % 500 == 0) {
+    if (move_To < glyphs.length - 1) {
+      move_To++
+    } else {
+      move_To = 0
+    }  
+  }
+
 
   strokeWeight(5)
-
   noFill()
-
   // for some reason the path is not connected... no idea why.
   // iterate thru glyphs
-  for ( let glyph of glyphs) {
+  for (let glyph of glyphs) {
     push()
 
     rotateY(glyph.direction.phi)
