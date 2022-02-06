@@ -64,7 +64,7 @@ function setup() {
     glyphs.push( new Glyph(
       txt[t],
       random(2, 4), // Anzahl Fragmente
-      center, // Position
+      center, // Position, im Moment noch nicht gebraucht
       {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t]
       ) );
