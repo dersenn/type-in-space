@@ -102,7 +102,7 @@ function draw() {
   // die x und y-position der Kamera wird aus dem Winkel berechnet
   // mit dem auf Zeile 116 gedreht wird
   move_To = 1
-  cam.setPosition( sin(glyphs[move_To].direction.phi) * cam.dist, 0, cos(glyphs[move_To].direction.phi)*cam.dist )
+  cam.setPosition( sin(glyphs[move_To].direction.phi) * cam.dist, 0, cos(glyphs[move_To].direction.phi) * cam.dist )
   //cam.setPosition(cam.x, cam.y, cam.z)
 
   strokeWeight(5)
@@ -114,7 +114,7 @@ function draw() {
   for ( let glyph of glyphs) {
     push()
 
-    rotateY( glyph.direction.phi)
+    rotateY(glyph.direction.phi)
 
     stroke(glyph.color)
     for (let i = 0; i < glyph.chunks.length; i++) {

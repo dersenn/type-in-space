@@ -1,6 +1,6 @@
 class Glyph{
-    constructor(letter, nChunks, position, direction, color){
-        this.bounds = font.textBounds(letter, 0, 0, fontSize)
+    constructor(letter, nChunks, position, direction, color) {
+        this.bounds = font.textBounds(letter, 0, 0, fontSize) 
         this.points = font.textToPoints(letter, -this.bounds.w/2, this.bounds.h/2, fontSize, ttpOpts)
         this.nChunks = nChunks
         this.chunkSize = this.points.length / this.nChunks
