@@ -94,14 +94,14 @@ function draw() {
   cam.y = 0
   cam.z = sin(cam.speed) * cam.dist
 
-  cam.lookAt(center)
+  cam.lookAt(0,0,0)
  
   
   // Zu einem Buchstaben bewegen
   // move_To ist die Position im glyphs-Array
   // die x und y-position der Kamera wird aus dem Winkel berechnet
   // mit dem auf Zeile 116 gedreht wird
-  move_To = 1
+  move_To = 3
   cam.setPosition( sin(glyphs[move_To].direction.phi) * cam.dist, 0, cos(glyphs[move_To].direction.phi) * cam.dist )
   //cam.setPosition(cam.x, cam.y, cam.z)
 
