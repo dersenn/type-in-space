@@ -64,6 +64,7 @@ function setup() {
     glyphs.push( new Glyph(
       txt[t],
       random(2, 4), // Anzahl Fragmente
+      center, // Position
       {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t]
       ) );
@@ -93,7 +94,7 @@ function draw() {
   cam.y = 0
   cam.z = sin(cam.speed) * cam.dist
 
-  cam.lookAt(0,0,0)
+  cam.lookAt(center)
  
   
   // Zu einem Buchstaben bewegen
