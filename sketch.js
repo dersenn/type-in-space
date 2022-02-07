@@ -59,7 +59,7 @@ function setup() {
     color (0,0,0)
   ]
 
-  // create glyp objects
+  // create glyph objects
   for (let t = 0; t < txt.length; t++ ){
     glyphs.push( new Glyph(
       txt[t],
@@ -70,8 +70,6 @@ function setup() {
       ) );
   }
 
-  
-  
   cam = createCamera()
 }
 
@@ -97,9 +95,9 @@ function draw() {
   //rudimentär animiert. es springt alle 500 frames zum nächsten Buchstaben ;-)
   //jetzt müsste man zwischen der aktuellen und nächsten Position interpolieren...
   //und ggf einen moment stehen bleiben.
-  cam.x = sin(glyphs[move_To].direction.phi) * cam.dist
+  cam.x = sin(glyphs[move_To].dir.phi) * cam.dist
   cam.y = 0
-  cam.z = cos(glyphs[move_To].direction.phi) * cam.dist
+  cam.z = cos(glyphs[move_To].dir.phi) * cam.dist
   
   cam.setPosition(cam.x, cam.y, cam.z)
 
