@@ -79,6 +79,7 @@ function setup() {
 
 let move_To = 0
 
+
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
   // orhtographic for now...
@@ -89,7 +90,7 @@ function draw() {
   background(255)
 
   cam.dist = canW / 2
-  cam.speed = frameCount / 300
+  cam.speed = frameCount / 100
 
   cam.lookAt(0,0,0)
  
@@ -102,7 +103,7 @@ function draw() {
   
   cam.setPosition(cam.x, cam.y, cam.z)
 
-  if(frameCount % 500 == 0) {
+  if(frameCount % 100 == 0) {
     if (move_To < glyphs.length - 1) {
       move_To++
     } else {
@@ -114,21 +115,22 @@ function draw() {
   strokeWeight(5)
   noFill()
   // for some reason the path is not connected... no idea why.
-  // iterate thru glyphs
+  // iterate thru glyphs and draw them
   for (let glyph of glyphs) {
-    push()
-
-    rotateY(glyph.direction.phi)
-
-    stroke(glyph.color)
-    for (let i = 0; i < glyph.chunks.length; i++) {
-      beginShape()
-      for (let p = 0; p < glyph.chunks[i].length; p++) {
-        let pt = glyph.chunks[i][p]
-        vertex(pt.x, pt.y, (i - glyph.chunks.length/2 + 0.5) * 100 )
-      }
-      endShape()
-    }
-    pop()
+    glyph.draw()
   }
-} 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// My only friend, the end.

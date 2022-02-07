@@ -17,8 +17,21 @@ class Glyph{
             this.chunks.push(this.points.slice(c, c + this.chunkSize))
         }
     }
-    
-    drawGlyph() {
-    // put stuff from sketch draw() in here.
+
+    draw() {
+        push()
+        rotateY(this.direction.phi)
+
+        stroke(this.color)
+
+        for (let i = 0; i < this.chunks.length; i++) {
+          beginShape()
+          for (let p = 0; p < this.chunks[i].length; p++) {
+            let pt = this.chunks[i][p]
+            vertex(pt.x, pt.y, (i - this.chunks.length/2 + 0.5) * 100 )
+          }
+          endShape()
+        }
+        pop()
     }
 }
