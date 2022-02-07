@@ -80,7 +80,10 @@ let next
 let cG // current Glyph
 let nG // next Glyph
 
+let angleX // kinda phi
+
 let rest = true
+let count = 0
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
@@ -91,7 +94,8 @@ function draw() {
   cam.dist = canW / 2
   cam.rest = 200 // frames
   cam.transition = 100 // frames
-  cam.speed = frameCount / cam.transition
+  cam.interval = cam.rest + cam.transition
+  cam.speed = frameCount / cam.transition // ?
 
   // movement variables. we need next for interpolation.
   if (current == glyphs.length - 1) {
@@ -105,22 +109,35 @@ function draw() {
   // we can ignore this for now, since all glyphs have the same initial position (center)
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
 
-  // this needs to lerp somehow between current and next.
-  cam.x = sin(curG.dir.phi) * cam.dist
-  cam.y = 0
-  cam.z = cos(curG.dir.phi) * cam.dist
+  // move camera on specific points in time
+  if (frameCount % (cam.interval - cam.transition) == 0) {
+    rest = false
+  }
+
+  if (rest) {
+    cam.x = sin(curG.dir.phi) * cam.dist
+    cam.y = 0
+    cam.z = cos(curG.dir.phi) * cam.dist
+  } else {
+    // lerp(start, stop, amt)
+    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, (nxtG.dir.phi - curG.dir.phi) / cam.transition) ) * cam.dist
+    cam.y = 0
+    cam.z = cos(curG.dir.phi) * cam.dist
+  }
+
+  // console.log(frameCount, rest)
 
 
   cam.setPosition(cam.x, cam.y, cam.z)
 
   // need to change this into some timed thing. needs to go into lerp above.
-  if(frameCount % cam.rest == 0) {
-    if (current == glyphs.length - 1) {
-      current = 0
-    } else {
-      current++
-    }
-  }
+  // if(frameCount % cam.rest == 0) {
+  //   if (current == glyphs.length - 1) {
+  //     current = 0
+  //   } else {
+  //     current++
+  //   }
+  // }
 
   strokeWeight(5)
   noFill()
