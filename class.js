@@ -1,5 +1,6 @@
 class Glyph {
-    constructor(letter, nChunks, position, direction, color) {
+    constructor(index, letter, nChunks, position, direction, color) {
+        this.index = index
         this.pos = position // the point in space where the letter "starts". can be used later to point the camera at. probably.
         this.dir = direction // phi and theta, kreiskoordinaten
 
@@ -16,13 +17,19 @@ class Glyph {
         }
     }
 
-    draw() {
+    draw(current) {
+        strokeWeight(5)
+
         push()
         rotateY(this.dir.phi)
         // rotateX(this.dir.theta)
 
         stroke(this.color)
-        strokeWeight(5)
+        if (current == this.index) {
+            strokeWeight(15)
+        } else {
+            strokeWeight(5)
+        }
         noFill()
 
         for (let i = 0; i < this.chunks.length; i++) {

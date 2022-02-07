@@ -61,10 +61,15 @@ function setup() {
   // create glyph objects
   for (let t = 0; t < txt.length; t++ ){
     glyphs.push( new Glyph(
+      t,
       txt[t],
       random(2, 4), // Anzahl Fragmente
       center, // Position, im Moment noch nicht gebraucht
-      {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
+      { 
+        phi: TAU/txt.length * t, // changed to non-random values for debugging...
+        theta: 0
+      },
+      // {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t],
       )
     )
@@ -77,13 +82,11 @@ function setup() {
 let current = 0 // formerly move_To. current glyph.
 let next
 
-let cG // current Glyph
-let nG // next Glyph
+let curG // current Glyph
+let nxtG // next Glyph
 
-let angleX // kinda phi
+let timer = 0 // used to get different intervals for animation and static (other approaches?)
 
-let rest = true
-let count = 0
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
@@ -92,12 +95,12 @@ function draw() {
 
   // camera setup.
   cam.dist = canW / 2
-  cam.rest = 200 // frames
-  cam.transition = 100 // frames
-  cam.interval = cam.rest + cam.transition
-  cam.speed = frameCount / cam.transition // ?
+  cam.restTime = 200 // frames
+  cam.transitionTime = 100 // frames
+  cam.interval = cam.restTime + cam.transitionTime
 
-  // movement variables. we need next for interpolation.
+  // get the next glyph. so we know where to move/interpolate to.
+  // could maybe go into nextGlyph() function...
   if (current == glyphs.length - 1) {
     next = 0
   } else {
@@ -106,51 +109,55 @@ function draw() {
   curG = glyphs[current]
   nxtG = glyphs[next]
 
+
   // we can ignore this for now, since all glyphs have the same initial position (center)
-  cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
-
-  // move camera on specific points in time. working but gets bigger and bigger.
-  if (frameCount % (cam.transition) == 0) {
-    rest = false
-    count++
-  } else if (frameCount % cam.interval == 0) {
-    rest = true
-  }
+  cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently: 0,0,0 (center)
 
 
-  // this might be good. but the above part is shitty.
-  if (rest) {
+
+// ok. somehow working. but.......
+  if (timer < cam.restTime) {
     cam.x = sin(curG.dir.phi) * cam.dist
     cam.y = 0
     cam.z = cos(curG.dir.phi) * cam.dist
-  } else {
-    // lerp(start, stop, amt)
-    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, (nxtG.dir.phi - curG.dir.phi) / cam.transition) ) * cam.dist
+
+    timer++
+    // console.log('rest')
+
+  } else if (timer < cam.interval) {
+    let aStep = ( (nxtG.dir.phi - curG.dir.phi) / cam.transitionTime ) * (timer - cam.restTime) // i have a feeling this is wrong.
+    // console.log(aStep)
+    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
     cam.y = 0
-    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, (nxtG.dir.phi - curG.dir.phi) / cam.transition) ) * cam.dist
+    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
+
+    timer++
+    // console.log('transiton')
+
+  } else {
+    timer = 0
+    // console.log('reset')
+    nextGlyph()
   }
 
-  // console.log(frameCount, rest, count)
-
+  // set the position of camera...
   cam.setPosition(cam.x, cam.y, cam.z)
 
-  // need to change this into some timed thing. needs to go into lerp above.
-  // if(frameCount % cam.rest == 0) {
-  //   if (current == glyphs.length - 1) {
-  //     current = 0
-  //   } else {
-  //     current++
-  //   }
-  // }
 
-
-  // iterate thru glyphs and draw them
-  for (let glyph of glyphs) {
-    glyph.draw()
+  // iterate thru glyphs and draw them. this works.
+  for (let g = 0; g < glyphs.length; g++) {
+    glyphs[g].draw(current)
   }
+
 }
 
-
+function nextGlyph() {
+  if (current == glyphs.length - 1) {
+    current = 0
+  } else {
+    current++
+  }
+}
 
 
 
