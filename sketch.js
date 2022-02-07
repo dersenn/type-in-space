@@ -135,7 +135,7 @@ function draw() {
     // we are moving. interpolate between next and current glyph's angles.
     // possibly we need to find a better interpolation mechanism.
     // maybe a for-loop...
-    let aStep = ( (nxtG.dir.phi - curG.dir.phi) / cam.transitionTime ) * (timer - cam.restTime) // i have a feeling this is wrong.
+    let aStep = ( (nxtG.dir.phi - curG.dir.phi) / cam.transitionTime ) * (timer - cam.restTime) // i have a feeling this is wrong. irgendwie überdreht das ding.
     // console.log(aStep)
     cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
     cam.y = 0
