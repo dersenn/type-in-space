@@ -80,38 +80,41 @@ let next
 let cG // current Glyph
 let nG // next Glyph
 
+let rest = true
+
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
   ortho()
   background(255)
 
+  // camera setup.
   cam.dist = canW / 2
   cam.rest = 200 // frames
   cam.transition = 100 // frames
   cam.speed = frameCount / cam.transition
 
+  // movement variables. we need next for interpolation.
   if (current == glyphs.length - 1) {
     next = 0
   } else {
     next = current + 1
   }
+  curG = glyphs[current]
+  nxtG = glyphs[next]
 
-  cG = glyphs[current]
-  nG = glyphs[next]
+  // we can ignore this for now, since all glyphs have the same initial position (center)
+  cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
 
-  cam.lookAt(cG.pos.x, cG.pos.y, cG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
-
-
-  cam.x = sin(cG.dir.phi) * cam.dist
+  // this needs to lerp somehow between current and next.
+  cam.x = sin(curG.dir.phi) * cam.dist
   cam.y = 0
-  cam.z = cos(cG.dir.phi) * cam.dist
-
+  cam.z = cos(curG.dir.phi) * cam.dist
 
 
   cam.setPosition(cam.x, cam.y, cam.z)
 
-  // need to change this into some timed thing
-  if(frameCount % 100 == 0) {
+  // need to change this into some timed thing. needs to go into lerp above.
+  if(frameCount % cam.rest == 0) {
     if (current == glyphs.length - 1) {
       current = 0
     } else {
