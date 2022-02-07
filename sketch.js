@@ -13,6 +13,12 @@ uuh, vor 3 noch den Buchstaben im Raum drehen so dass er iN richtung Richtungsve
 7. Kamerabewegung animieren
 */
 
+/*
+THOUGHTS:
+— the letters stay put. only the camera moves.
+— maybe the cam position etc. can also go into the Glyph class, so we can only update this.
+*/
+
 // CANVAS VARS
 const container = document.getElementById('p5-container')
 let canW = container.offsetWidth //canvas Width
@@ -78,14 +84,15 @@ function setup() {
   cam = createCamera()
 }
 
+
 // ANIMATION VARS
 let current = 0 // formerly move_To. current glyph.
-let next
+let next // next Glyph (somewhat redundant with the one below...)
 
 let curG // current Glyph
 let nxtG // next Glyph
 
-let timer = 0 // used to get different intervals for animation and static (other approaches?)
+let timer = 0 // used to get different intervals of animating and static states (other approaches?). I tried to base it on frameCount, but didn't get it to work.
 
 
 ///////////////////////////////////////////////////////// P5 DRAW
@@ -100,7 +107,7 @@ function draw() {
   cam.interval = cam.restTime + cam.transitionTime
 
   // get the next glyph. so we know where to move/interpolate to.
-  // could maybe go into nextGlyph() function...
+  // could maybe go into nextGlyph() function at the end...
   if (current == glyphs.length - 1) {
     next = 0
   } else {
@@ -114,9 +121,9 @@ function draw() {
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently: 0,0,0 (center)
 
 
-
 // ok. somehow working. but.......
   if (timer < cam.restTime) {
+    // we are in rest mode. use current glyph direction for camera angle.
     cam.x = sin(curG.dir.phi) * cam.dist
     cam.y = 0
     cam.z = cos(curG.dir.phi) * cam.dist
@@ -125,6 +132,9 @@ function draw() {
     // console.log('rest')
 
   } else if (timer < cam.interval) {
+    // we are moving. interpolate between next and current glyph's angles.
+    // possibly we need to find a better interpolation mechanism.
+    // maybe a for-loop...
     let aStep = ( (nxtG.dir.phi - curG.dir.phi) / cam.transitionTime ) * (timer - cam.restTime) // i have a feeling this is wrong.
     // console.log(aStep)
     cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
@@ -132,9 +142,10 @@ function draw() {
     cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
 
     timer++
-    // console.log('transiton')
+    // console.log('transition')
 
   } else {
+    // we are done moving. reset timer and move to next glyph.
     timer = 0
     // console.log('reset')
     nextGlyph()
