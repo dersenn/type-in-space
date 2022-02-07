@@ -22,6 +22,11 @@ let canMin = Math.min(canW, canH) //shorter canvas side
 let landscape = false
 if (canW > canH) landscape = true
 
+// PRELOAD
+function preload() {
+  font = loadFont('assets/MunkenSans-Medium.otf')
+}
+
 // "GLOBAL" VARS
 let center
 
@@ -30,11 +35,6 @@ let fontSize = canW / 2
 let txt = ['C','4', 'T', 'A']
 
 let cam
-
-// PRELOAD
-function preload() {
-  font = loadFont('assets/MunkenSans-Medium.otf')
-}
 
 let glyphs = []
 let ttpOpts = {
@@ -75,14 +75,12 @@ function setup() {
 
 // ANIMATION VARS
 
-let move_To = 0
+let current = 0 // formerly move_To
 
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-  // orhtographic for now...
-  // this maybe, for scaling of chunks:
-  // https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/building-basic-perspective-projection-matrix
+
   ortho()
 
   background(255)
@@ -90,25 +88,21 @@ function draw() {
   cam.dist = canW / 2
   cam.speed = frameCount / 100
 
-  cam.lookAt(0,0,0)
+  cam.lookAt(glyphs[current].pos.x, glyphs[current].pos.y, glyphs[current].pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
  
-  //rudimentär animiert. es springt alle 500 frames zum nächsten Buchstaben ;-)
-  //jetzt müsste man zwischen der aktuellen und nächsten Position interpolieren...
-  //und ggf einen moment stehen bleiben.
-  cam.x = sin(glyphs[move_To].dir.phi) * cam.dist
+  cam.x = sin(glyphs[current].dir.phi) * cam.dist
   cam.y = 0
-  cam.z = cos(glyphs[move_To].dir.phi) * cam.dist
+  cam.z = cos(glyphs[current].dir.phi) * cam.dist
   
   cam.setPosition(cam.x, cam.y, cam.z)
 
   if(frameCount % 100 == 0) {
-    if (move_To < glyphs.length - 1) {
-      move_To++
+    if (current < glyphs.length - 1) {
+      current++
     } else {
-      move_To = 0
+      current = 0
     }  
   }
-
 
   strokeWeight(5)
   noFill()

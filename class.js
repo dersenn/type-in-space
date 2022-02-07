@@ -1,4 +1,4 @@
-class Glyph{
+class Glyph {
     constructor(letter, nChunks, position, direction, color) {
         this.pos = position // the point in space where the letter "starts". can be used later to point the camera at. probably.
         this.dir = direction // phi and theta, kreiskoordinaten
@@ -16,9 +16,15 @@ class Glyph{
         }
     }
 
+    update() {
+        // we'll need this to get the position into the object while animating.
+        // or maybe we don't. the letters stay. the cam moves.
+    }
+
     draw() {
         push()
         rotateY(this.dir.phi)
+        // rotateX(this.dir.theta)
 
         stroke(this.color)
 
