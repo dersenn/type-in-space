@@ -110,7 +110,7 @@ function draw() {
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
 
   // move camera on specific points in time. working but gets bigger and bigger.
-  if (frameCount % (cam.interval - cam.transition) == 0) {
+  if (frameCount % (cam.transition) == 0) {
     rest = false
     count++
   } else if (frameCount % cam.interval == 0) {
@@ -127,11 +127,10 @@ function draw() {
     // lerp(start, stop, amt)
     cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, (nxtG.dir.phi - curG.dir.phi) / cam.transition) ) * cam.dist
     cam.y = 0
-    cam.z = cos(curG.dir.phi) * cam.dist
+    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, (nxtG.dir.phi - curG.dir.phi) / cam.transition) ) * cam.dist
   }
 
   // console.log(frameCount, rest, count)
-
 
   cam.setPosition(cam.x, cam.y, cam.z)
 
