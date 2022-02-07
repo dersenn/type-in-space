@@ -45,7 +45,6 @@ let ttpOpts = {
 // STYLE
 let colors
 
-
 ///////////////////////////////////////////////////////// P5 SETUP
 function setup() {
   let canvas = createCanvas(canW,canH,WEBGL)
@@ -74,19 +73,18 @@ function setup() {
 }
 
 // ANIMATION VARS
-
 let current = 0 // formerly move_To
 
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-
   ortho()
-
   background(255)
 
   cam.dist = canW / 2
-  cam.speed = frameCount / 100
+  cam.rest = 200 // frames
+  cam.transition = 100 // frames
+  cam.speed = frameCount / cam.transition
 
   cam.lookAt(glyphs[current].pos.x, glyphs[current].pos.y, glyphs[current].pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
  
@@ -96,6 +94,8 @@ function draw() {
   
   cam.setPosition(cam.x, cam.y, cam.z)
 
+
+  // need to change this into some timed thing
   if(frameCount % 100 == 0) {
     if (current < glyphs.length - 1) {
       current++
@@ -112,12 +112,6 @@ function draw() {
     glyph.draw()
   }
 }
-
-
-
-
-
-
 
 
 
