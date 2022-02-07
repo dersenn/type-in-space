@@ -22,6 +22,8 @@ class Glyph {
         // rotateX(this.dir.theta)
 
         stroke(this.color)
+        strokeWeight(5)
+        noFill()
 
         for (let i = 0; i < this.chunks.length; i++) {
           beginShape()

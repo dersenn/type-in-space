@@ -109,11 +109,16 @@ function draw() {
   // we can ignore this for now, since all glyphs have the same initial position (center)
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
 
-  // move camera on specific points in time
+  // move camera on specific points in time. working but gets bigger and bigger.
   if (frameCount % (cam.interval - cam.transition) == 0) {
     rest = false
+    count++
+  } else if (frameCount % cam.interval == 0) {
+    rest = true
   }
 
+
+  // this might be good. but the above part is shitty.
   if (rest) {
     cam.x = sin(curG.dir.phi) * cam.dist
     cam.y = 0
@@ -125,7 +130,7 @@ function draw() {
     cam.z = cos(curG.dir.phi) * cam.dist
   }
 
-  // console.log(frameCount, rest)
+  // console.log(frameCount, rest, count)
 
 
   cam.setPosition(cam.x, cam.y, cam.z)
@@ -139,8 +144,6 @@ function draw() {
   //   }
   // }
 
-  strokeWeight(5)
-  noFill()
 
   // iterate thru glyphs and draw them
   for (let glyph of glyphs) {
