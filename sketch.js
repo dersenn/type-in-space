@@ -65,16 +65,20 @@ function setup() {
       random(2, 4), // Anzahl Fragmente
       center, // Position, im Moment noch nicht gebraucht
       {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
-      colors[t]
-      ) );
+      colors[t],
+      )
+    )
   }
 
   cam = createCamera()
 }
 
 // ANIMATION VARS
-let current = 0 // formerly move_To
+let current = 0 // formerly move_To. current glyph.
+let next
 
+let cG // current Glyph
+let nG // next Glyph
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
@@ -86,27 +90,38 @@ function draw() {
   cam.transition = 100 // frames
   cam.speed = frameCount / cam.transition
 
-  cam.lookAt(glyphs[current].pos.x, glyphs[current].pos.y, glyphs[current].pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
- 
-  cam.x = sin(glyphs[current].dir.phi) * cam.dist
-  cam.y = 0
-  cam.z = cos(glyphs[current].dir.phi) * cam.dist
-  
-  cam.setPosition(cam.x, cam.y, cam.z)
+  if (current == glyphs.length - 1) {
+    next = 0
+  } else {
+    next = current + 1
+  }
 
+  cG = glyphs[current]
+  nG = glyphs[next]
+
+  cam.lookAt(cG.pos.x, cG.pos.y, cG.pos.z) // cam needs to look at the current glyphs init point. currently 0,0,0
+
+
+  cam.x = sin(cG.dir.phi) * cam.dist
+  cam.y = 0
+  cam.z = cos(cG.dir.phi) * cam.dist
+
+
+
+  cam.setPosition(cam.x, cam.y, cam.z)
 
   // need to change this into some timed thing
   if(frameCount % 100 == 0) {
-    if (current < glyphs.length - 1) {
-      current++
-    } else {
+    if (current == glyphs.length - 1) {
       current = 0
-    }  
+    } else {
+      current++
+    }
   }
 
   strokeWeight(5)
   noFill()
-  // for some reason the path is not connected... no idea why.
+
   // iterate thru glyphs and draw them
   for (let glyph of glyphs) {
     glyph.draw()

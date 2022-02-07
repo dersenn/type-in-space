@@ -16,11 +16,6 @@ class Glyph {
         }
     }
 
-    update() {
-        // we'll need this to get the position into the object while animating.
-        // or maybe we don't. the letters stay. the cam moves.
-    }
-
     draw() {
         push()
         rotateY(this.dir.phi)
