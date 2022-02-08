@@ -121,7 +121,7 @@ function draw() {
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently: 0,0,0 (center)
 
 
-// ok. somehow working. but.......
+// ok. somehow working.
   if (timer < cam.restTime) {
     // we are in rest mode. use current glyph direction for camera angle.
     cam.x = sin(curG.dir.phi) * cam.dist
@@ -133,13 +133,11 @@ function draw() {
 
   } else if (timer < cam.interval) {
     // we are moving. interpolate between next and current glyph's angles.
-    // possibly we need to find a better interpolation mechanism.
-    // maybe a for-loop...
-    let aStep = ( (nxtG.dir.phi - curG.dir.phi) / cam.transitionTime ) * (timer - cam.restTime) // i have a feeling this is wrong. irgendwie überdreht das ding.
+    let aPos = (timer - cam.restTime) / 100 // something's still a bit jumpy
     // console.log(aStep)
-    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
+    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
     cam.y = 0
-    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aStep) ) * cam.dist
+    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
 
     timer++
     // console.log('transition')
