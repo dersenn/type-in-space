@@ -72,8 +72,8 @@ function setup() {
       random(2, 4), // Anzahl Fragmente
       center, // Position, im Moment noch nicht gebraucht
       { 
-        phi: random(0, TAU), // changed to non-random values for debugging...
-        theta: random(0, TAU)
+        phi: random(0, PI), // changed to non-random values for debugging...
+        theta: random(0, PI)
       },
       // {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t],
@@ -97,13 +97,13 @@ let timer = 0 // used to get different intervals of animating and static states 
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-  ortho()
+  // ortho()
   background(255)
 
   // camera setup.
   cam.dist = canW / 2
   cam.restTime = 200 // frames
-  cam.transitionTime = 100 // frames
+  cam.transitionTime = 200 // frames. off for now. 
   cam.interval = cam.restTime + cam.transitionTime
 
   // get the next glyph. so we know where to move/interpolate to.
@@ -124,20 +124,42 @@ function draw() {
 // ok. somehow working.
   if (timer < cam.restTime) {
     // we are in rest mode. use current glyph direction for camera angle.
-    cam.x = sin(curG.dir.phi) * cos(curG.dir.theta) * cam.dist
-    cam.y = sin(curG.dir.theta) * cam.dist
-    cam.z = cos(curG.dir.phi) * sin(curG.dir.theta) * cam.dist
+
+    // https://stackoverflow.com/questions/52781607/3d-point-from-two-angles-and-a-distance
+    cam.x = -sin(curG.dir.phi) * cos(curG.dir.theta) * cam.dist
+    cam.y = -sin(curG.dir.theta) * cam.dist
+    cam.z = -cos(curG.dir.phi) * sin(curG.dir.theta) * cam.dist
+
 
     timer++
     // console.log('rest')
 
+
+
+  // this can be ignored for debugging... the angles are off generally.
   } else if (timer < cam.interval) {
     // we are moving. interpolate between next and current glyph's angles.
     let aPos = (timer - cam.restTime) / 100 // something's still a bit jumpy
     // console.log(aStep)
-    cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
-    cam.y = 0
-    cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
+    cam.x = lerp(
+      sin(curG.dir.phi) * cos(curG.dir.theta) * cam.dist,
+      sin(nxtG.dir.phi) * cos(nxtG.dir.theta) * cam.dist,
+      aPos
+    )
+    cam.y = lerp(
+      sin(curG.dir.theta) * cam.dist,
+      sin(nxtG.dir.theta) * cam.dist,
+      aPos
+    )
+    cam.z = lerp(
+      cos(curG.dir.phi) * sin(curG.dir.theta) * cam.dist,
+      cos(nxtG.dir.phi) * sin(nxtG.dir.theta) * cam.dist,
+      aPos
+    )
+
+    // cam.x = sin( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
+    // cam.y = 0
+    // cam.z = cos( lerp(curG.dir.phi, nxtG.dir.phi, aPos) ) * cam.dist
 
     timer++
     // console.log('transition')
