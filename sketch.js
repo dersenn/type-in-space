@@ -72,8 +72,8 @@ function setup() {
       random(2, 4), // Anzahl Fragmente
       center, // Position, im Moment noch nicht gebraucht
       { 
-        phi: TAU/txt.length * t, // changed to non-random values for debugging...
-        theta: 0
+        phi: random(0, TAU), // changed to non-random values for debugging...
+        theta: TAU/txt.length * t
       },
       // {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t],

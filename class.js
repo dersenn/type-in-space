@@ -22,7 +22,7 @@ class Glyph {
 
         push()
         rotateY(this.dir.phi)
-        // rotateX(this.dir.theta)
+        rotateX(this.dir.theta)
 
         stroke(this.color)
         if (current == this.index) {
