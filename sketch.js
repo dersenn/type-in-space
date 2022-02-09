@@ -73,7 +73,7 @@ function setup() {
       center, // Position, im Moment noch nicht gebraucht
       { 
         phi: random(0, TAU), // changed to non-random values for debugging...
-        theta: TAU/txt.length * t
+        theta: random(0, TAU)
       },
       // {phi: random(0, TAU), theta: random(0, TAU)}, // Momentan wird nur phi gebraucht, theta für 3D-Umsetzung
       colors[t],
@@ -124,9 +124,9 @@ function draw() {
 // ok. somehow working.
   if (timer < cam.restTime) {
     // we are in rest mode. use current glyph direction for camera angle.
-    cam.x = sin(curG.dir.phi) * cam.dist
-    cam.y = 0
-    cam.z = cos(curG.dir.phi) * cam.dist
+    cam.x = sin(curG.dir.phi) * cos(curG.dir.theta) * cam.dist
+    cam.y = sin(curG.dir.theta) * cam.dist
+    cam.z = cos(curG.dir.phi) * sin(curG.dir.theta) * cam.dist
 
     timer++
     // console.log('rest')
