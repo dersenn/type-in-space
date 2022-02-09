@@ -97,7 +97,7 @@ let timer = 0 // used to get different intervals of animating and static states 
 
 ///////////////////////////////////////////////////////// P5 DRAW
 function draw() {
-  // ortho()
+  ortho()
   background(255)
 
   // camera setup.
@@ -121,7 +121,7 @@ function draw() {
   cam.lookAt(curG.pos.x, curG.pos.y, curG.pos.z) // cam needs to look at the current glyphs init point. currently: 0,0,0 (center)
 
 
-// ok. somehow working.
+  // ok. somehow working.
   if (timer < cam.restTime) {
     // we are in rest mode. use current glyph direction for camera angle.
 
